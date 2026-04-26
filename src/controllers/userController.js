@@ -14,7 +14,7 @@ function generateToken(user) {
   );
 }
 
-// 🔥 TESTE AQUI
+
 async function register(req, res) {
   try {
     const { name, email, password, role } = req.body;
