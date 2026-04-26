@@ -17,44 +17,34 @@ function generateToken(user) {
 // 🔥 TESTE AQUI
 async function register(req, res) {
   try {
-    return res.json({ teste: 'funcionando' });
-  } catch (error) {
-    return res.status(500).json({ message: 'Erro ao cadastrar usuário.', error: error.message });
-  }
-}
+    const { name, email, password, role } = req.body;
 
-async function login(req, res) {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email e password são obrigatórios.' });
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Nome, email e senha são obrigatórios.' });
     }
 
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-      return res.status(401).json({ message: 'Credenciais inválidas.' });
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ message: 'Usuário já existe.' });
     }
 
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Credenciais inválidas.' });
-    }
+    const user = new User({
+      name,
+      email,
+      password,
+      role
+    });
 
-    const token = generateToken(user);
+    await user.save();
 
-    return res.status(200).json({
-      message: 'Login realizado com sucesso.',
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
+    return res.status(201).json({
+      message: 'Usuário cadastrado com sucesso.'
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Erro ao realizar login.', error: error.message });
+    return res.status(500).json({
+      message: 'Erro ao cadastrar usuário.',
+      error: error.message
+    });
   }
 }
 
