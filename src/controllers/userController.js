@@ -12,7 +12,7 @@ function generateToken(user) {
     process.env.JWT_SECRET,
     { expiresIn: '1d' }
   );
-}
+} 
 
 async function register(req, res) {
   try {
@@ -31,7 +31,7 @@ async function register(req, res) {
       name,
       email,
       password,
-      role: role || 'user'
+      role: role || 'customer'
     });
 
     return res.status(201).json({
