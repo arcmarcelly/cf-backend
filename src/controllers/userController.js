@@ -12,37 +12,12 @@ function generateToken(user) {
     process.env.JWT_SECRET,
     { expiresIn: '1d' }
   );
-} 
+}
 
+// 🔥 TESTE AQUI
 async function register(req, res) {
   try {
-    const { name, email, password, role } = req.body;
-
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Name, email e password são obrigatórios.' });
-    }
-
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(409).json({ message: 'Já existe um usuário com esse email.' });
-    }
-
-    const user = await User.create({
-      name,
-      email,
-      password,
-      role: role || 'customer'
-    });
-
-    return res.status(201).json({
-      message: 'Usuário cadastrado com sucesso.',
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
-    });
+    return res.json({ teste: 'funcionando' });
   } catch (error) {
     return res.status(500).json({ message: 'Erro ao cadastrar usuário.', error: error.message });
   }
